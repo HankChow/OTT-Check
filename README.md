@@ -5,7 +5,7 @@ To check whether the current IP is available for OTT platforms.
 This is a Python version based on [lmc999/RegionRestrictionCheck](https://github.com/lmc999/RegionRestrictionCheck). Trying my best to compatible with both Python 2 and Python 3.
 
 
-# currently availble for
+## currently availble for
 
 * multination
 
