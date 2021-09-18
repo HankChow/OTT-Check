@@ -20,3 +20,7 @@ This is a Python version based on [lmc999/RegionRestrictionCheck](https://github
   * YouTube Premium
 
   * Amazon Prime Video
+
+* North America
+
+  * Fox

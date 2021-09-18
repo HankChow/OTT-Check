@@ -2,6 +2,7 @@
 
 import json
 import re
+from sre_constants import FAILURE
 import requests
 
 
@@ -27,6 +28,9 @@ class OTTCheck(object):
         print("Hotstar -> {result}".format(result=self.check_hotstar()))
         print("YouTube Premium -> {result}".format(result=self.check_youtube_premium()))
         print("Amazon Prime Video -> {result}".format(result=self.check_prime_video()))
+
+    def north_america(self):
+        print("Fox -> {result}".format(result=self.check_fox()))
 
     def check_dazn(self):
         result = None
@@ -200,6 +204,25 @@ class OTTCheck(object):
             result = "Unsupported"
         return result
        
+    def check_fox(self): # TODO: test
+        result = None
+        response = None
+        status_code = None
+        try:
+            response = requests.get("https://x-live-fox-stgec.uplynk.com/ausw/slices/8d1/d8e6eec26bf544f084bad49a7fa2eac5/8d1de292bcc943a6b886d029e6c0dc87/G00000000.ts?pbs=c61e60ee63ce43359679fb9f65d21564&cloud=aws&si=0", timeout=self.default_timeout, verify=False)
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network connection)"
+        status_code = response.status_code
+        if status_code == 200:
+            result = "Yes"
+        elif status_code == 403:
+            result = "No"
+        else:
+            failed_result = response.text
+            result = "Failed (Unexpected result: {failed_result})".format(failed_result=failed_result)
+        return result
+
 
 oc = OTTCheck()
 print(oc.multination())
+print(oc.north_america())
