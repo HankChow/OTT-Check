@@ -26,6 +26,7 @@ class OTTCheck(object):
         print("DisneyPlus -> {result}".format(result=self.check_disneyplus()))
         print("Hotstar -> {result}".format(result=self.check_hotstar()))
         print("YouTube Premium -> {result}".format(result=self.check_youtube_premium()))
+        print("Amazon Prime Video -> {result}".format(result=self.check_prime_video()))
 
     def check_dazn(self):
         result = None
