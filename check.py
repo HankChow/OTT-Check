@@ -165,7 +165,7 @@ class OTTCheck(object):
         except requests.exceptions.ConnectTimeout as e:
             result = "Failed (Network Connection)"
             return result
-        region = re.search('"countryCode":"[A-Z]\{2\}"', requests.get("https://www.youtube.com/premium", headers={
+        region = re.search(r'"countryCode":"[A-Z]{2}"', requests.get("https://www.youtube.com/premium", headers={
             "User-Agent": self.user_agent,
         }, timeout=self.default_timeout).text)
         if not region:
