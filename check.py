@@ -180,6 +180,24 @@ class OTTCheck(object):
         else:
             result = "Failed"
         return result
+
+    def check_prime_video(self):
+        result = None
+        response = None
+        try:
+            response = requests.get("https://www.primevideo.com", headers={
+                "User-Agent": self.user_agent
+            }, timeout=self.default_timeout, verify=False).text
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        region = re.search(r'"currentTerritory":"[A-Z]{2}"', response)
+        if region:
+            region = region.group().split('"')[3]
+            result = "Yes (Region: {region})".format(region=region)
+        else:
+            result = "Unsupported"
+        return result
        
 
 oc = OTTCheck()
