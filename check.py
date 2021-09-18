@@ -25,6 +25,7 @@ class OTTCheck(object):
         print("Dazn -> {result}".format(result=self.check_dazn()))
         print("DisneyPlus -> {result}".format(result=self.check_disneyplus()))
         print("Hotstar -> {result}".format(result=self.check_hotstar()))
+        print("YouTube Premium -> {result}".format(result=self.check_youtube_premium()))
 
     def check_dazn(self):
         result = None
@@ -153,8 +154,33 @@ class OTTCheck(object):
         else:
             result = "Failed (Network Connection)"
         return result
+
+    def check_youtube_premium(self):
+        result = None
+        response = None
+        try:
+            response = requests.get("https://www.youtube.com/premium", headers={
+                "Accept-Language": "en"
+            }).text
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        region = re.search('"countryCode":"[A-Z]\{2\}"', requests.get("https://www.youtube.com/premium", headers={
+            "User-Agent": self.user_agent,
+        }, timeout=self.default_timeout).text)
+        if not region:
+            region = "CN" if "www.google.cn" in response else "US"
+        else:
+            region = region.group().split('"')[3]
+        if "Premium is not available in your country" in response:
+            result = "No (Region: {region})".format(region=region)
+            return result
+        if "YouTube and YouTube Music ad-free" in response:
+            result = "Yes (Region: {region})".format(region=region)
+        else:
+            result = "Failed"
+        return result
        
 
 oc = OTTCheck()
 print(oc.multination())
-
