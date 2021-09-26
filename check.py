@@ -4,6 +4,7 @@ import json
 import re
 from sre_constants import FAILURE
 import requests
+from requests import exceptions
 
 
 class OTTCheck(object):
@@ -220,6 +221,40 @@ class OTTCheck(object):
         else:
             failed_result = response.text
             result = "Failed (Unexpected result: {failed_result})".format(failed_result=failed_result)
+        return result
+
+    def check_hbo_now(self): # TODO: test
+        result = None
+        try:
+            redirect_url = requests.get("https://play.hbonow.com/", headers={
+                "User-Agent": self.user_agent
+            }, timeout=self.default_timeout).url
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if redirect_url in ["https://play.hbonow.com", "https://play.hbonow.com/"]:
+            result = "Yes"
+        elif redirect_url in ["http://hbogeo.cust.footprint.net/hbonow/geo.html", "http://geocust.hbonow.com/hbonow/geo.html"]:
+            result = "No"
+        else:
+            result = "Failed (Network Connection)"
+        return result
+            
+    def check_hbo_max(self): # TODO: test
+        result = None
+        try:
+            redirect_url = requests.get("https://www.hbomax.com/", timeout=self.default_timeout, verify=False).url
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        is_unavailable = "geo-availability" in redirect_url
+        region = redirect_url.split("/")[3].upper() if len(redirect_url.split("/")) > 3 else None
+        if is_unavailable:
+            result = "No"
+        elif region:
+            result = "Yes (Region: {region})".format(region=region)
+        else:
+            result = "Yes"
         return result
 
 
