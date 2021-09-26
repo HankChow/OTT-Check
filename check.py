@@ -32,6 +32,8 @@ class OTTCheck(object):
 
     def north_america(self):
         print("Fox -> {result}".format(result=self.check_fox()))
+        print("HBO Now -> {result}".format(result=self.check_hbo_now()))
+        print("HBO Max -> {result}".format(result=self.check_hbo_max()))
 
     def check_dazn(self):
         result = None
