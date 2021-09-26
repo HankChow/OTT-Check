@@ -34,6 +34,7 @@ class OTTCheck(object):
         print("Fox -> {result}".format(result=self.check_fox()))
         print("HBO Now -> {result}".format(result=self.check_hbo_now()))
         print("HBO Max -> {result}".format(result=self.check_hbo_max()))
+        print("Fubo TV -> {result}".format(result=self.check_fubo_tv()))
 
     def check_dazn(self):
         result = None
@@ -257,6 +258,18 @@ class OTTCheck(object):
             result = "Yes (Region: {region})".format(region=region)
         else:
             result = "Yes"
+        return result
+
+    def check_fubo_tv(self): # TODO: test
+        result = None
+        response = None
+        try:
+            response = requests.get("https://www.fubo.tv/welcome", timeout=self.default_timeout, verify=False).text
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        region = re.search('"countryCode":"\w+"', response).group().split('"')[3]
+        result = (region == "USA")
         return result
 
 
