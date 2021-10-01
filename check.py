@@ -37,6 +37,7 @@ class OTTCheck(object):
         print("HBO Max -> {result}".format(result=self.check_hbo_max()))
         print("Fubo TV -> {result}".format(result=self.check_fubo_tv()))
         print("Sling TV -> {result}".format(result=self.check_sling_tv()))
+        print("Pluto TV -> {result}".format(result=self.check_pluto_tv()))
 
     def check_dazn(self):
         result = None
@@ -290,6 +291,20 @@ class OTTCheck(object):
             result = "No"
         else:
             result = "Failed (Unexpected result: {status_code})".format(status_code=status_code)
+        return result
+
+    def check_pluto_tv(self):
+        result = None
+        redirect_url = None
+        try:
+            redirect_url = requests.get("https://pluto.tv/", verify=False, timeout=self.default_timeout).url
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if "thanks-for-watching" in redirect_url:
+            result = "No"
+        else:
+            result = "Yes"
         return result
 
 

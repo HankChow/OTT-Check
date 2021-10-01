@@ -32,3 +32,5 @@ This is a Python version based on [lmc999/RegionRestrictionCheck](https://github
   * Fubo TV
 
   * Sling TV
+
+  * Pluto TV
