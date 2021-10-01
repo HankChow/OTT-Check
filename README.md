@@ -40,3 +40,5 @@ This is a Python version based on [lmc999/RegionRestrictionCheck](https://github
   * Sky Go
 
   * Channel 4
+
+  * ITV Hub

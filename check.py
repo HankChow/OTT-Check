@@ -42,6 +42,7 @@ class OTTCheck(object):
     def europe(self):
         print("Sky Go -> {result}".format(result=self.check_sky_go()))
         print("Channel 4 -> {result}".format(result=self.check_channel_4()))
+        print("ITV Hub -> {result}".format(result=self.check_itv_hub()))
 
     def check_dazn(self):
         result = None
@@ -343,6 +344,22 @@ class OTTCheck(object):
                 result = "Failed (Unexpected result: {status})".format(status=status.group())
         else:
             result = "Failed (Network Connection)"
+        return result
+
+    def check_itv_hub(self): # TODO: test
+        result = None
+        status_code = None
+        try:
+            status_code = requests.get("https://simulcast.itv.com/playlist/itvonline/ITV", verify=False, timeout=self.default_timeout)
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if status_code == 404:
+            result = "Yes"
+        elif status_code == 403:
+            result = "No"
+        else:
+            result = "Failed (Unexpected result: {status_code})".format(status_code=status_code)
         return result
 
 oc = OTTCheck()
