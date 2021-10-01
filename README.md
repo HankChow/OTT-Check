@@ -34,3 +34,7 @@ This is a Python version based on [lmc999/RegionRestrictionCheck](https://github
   * Sling TV
 
   * Pluto TV
+
+* Europe
+
+  * Sky Go

@@ -39,6 +39,9 @@ class OTTCheck(object):
         print("Sling TV -> {result}".format(result=self.check_sling_tv()))
         print("Pluto TV -> {result}".format(result=self.check_pluto_tv()))
 
+    def europe(self):
+        print("Sky Go -> {result}".format(result=self.check_sky_go()))
+
     def check_dazn(self):
         result = None
         response = None
@@ -307,7 +310,21 @@ class OTTCheck(object):
             result = "Yes"
         return result
 
+    def check_sky_go(self): # TODO: test
+        result = None
+        response = None
+        try:
+            response = requests.get("https://skyid.sky.com/authorise/skygo?response_type=token&client_id=sky&appearance=compact&redirect_uri=skygo://auth", verify=False, timeout=self.default_timeout)
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if "You don't have permission to access" in response:
+            result = "No"
+        else:
+            result = "Yes"
+        return result
 
 oc = OTTCheck()
 print(oc.multination())
 print(oc.north_america())
+print(oc.europe())
