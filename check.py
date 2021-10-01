@@ -296,7 +296,7 @@ class OTTCheck(object):
             result = "Failed (Unexpected result: {status_code})".format(status_code=status_code)
         return result
 
-    def check_pluto_tv(self):
+    def check_pluto_tv(self): # TODO: test
         result = None
         redirect_url = None
         try:
