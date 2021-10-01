@@ -10,6 +10,7 @@ from requests import exceptions
 class OTTCheck(object):
 
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36"
+    dalvik_user_agent = "Dalvik/2.1.0 (Linux; U; Android 9; ALP-AL00 Build/HUAWEIALP-AL00)"
     default_timeout = 10
     cookie_file = None
 
@@ -35,6 +36,7 @@ class OTTCheck(object):
         print("HBO Now -> {result}".format(result=self.check_hbo_now()))
         print("HBO Max -> {result}".format(result=self.check_hbo_max()))
         print("Fubo TV -> {result}".format(result=self.check_fubo_tv()))
+        print("Sling TV -> {result}".format(result=self.check_sling_tv()))
 
     def check_dazn(self):
         result = None
@@ -270,6 +272,24 @@ class OTTCheck(object):
             return result
         region = re.search('"countryCode":"\w+"', response).group().split('"')[3]
         result = (region == "USA")
+        return result
+
+    def check_sling_tv(self): # TODO: test
+        result = None
+        status_code = None
+        try:
+            status_code = requests.get("https://www.sling.com/", headers={
+                "User-Agent": self.dalvik_user_agent
+            }, verify=False, timeout=self.default_timeout).status_code
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if status_code == 200:
+            result = "Yes"
+        elif status_code == 403:
+            result = "No"
+        else:
+            result = "Failed (Unexpected result: {status_code})".format(status_code=status_code)
         return result
 
 
