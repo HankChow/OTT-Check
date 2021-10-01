@@ -41,6 +41,7 @@ class OTTCheck(object):
 
     def europe(self):
         print("Sky Go -> {result}".format(result=self.check_sky_go()))
+        print("Channel 4 -> {result}".format(result=self.check_channel_4()))
 
     def check_dazn(self):
         result = None
@@ -322,6 +323,26 @@ class OTTCheck(object):
             result = "No"
         else:
             result = "Yes"
+        return result
+
+    def check_channel_4(self):
+        result = None
+        response = None
+        try:
+            response = requests.get("https://ais.channel4.com/simulcast/C4?client=c4", verify=False, timeout=self.default_timeout)
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        status = re.search(r'status="[A-Z]+"', response)
+        if status:
+            if "ERROR" in status.group():
+                result = "No"
+            elif "OK" in status.group():
+                result = "Yes"
+            else:
+                result = "Failed (Unexpected result: {status})".format(status=status.group())
+        else:
+            result = "Failed (Network Connection)"
         return result
 
 oc = OTTCheck()
