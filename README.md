@@ -38,3 +38,5 @@ This is a Python version based on [lmc999/RegionRestrictionCheck](https://github
 * Europe
 
   * Sky Go
+
+  * Channel 4
