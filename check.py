@@ -326,7 +326,7 @@ class OTTCheck(object):
             result = "Yes"
         return result
 
-    def check_channel_4(self):
+    def check_channel_4(self): # TODO: test
         result = None
         response = None
         try:
