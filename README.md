@@ -44,3 +44,5 @@ This is a Python version based on [lmc999/RegionRestrictionCheck](https://github
   * ITV Hub
 
   * BBC iPlayer
+
+  * Britbox

@@ -44,6 +44,7 @@ class OTTCheck(object):
         print("Channel 4 -> {result}".format(result=self.check_channel_4()))
         print("ITV Hub -> {result}".format(result=self.check_itv_hub()))
         print("BBC iPlayer -> {result}".format(result=self.check_bbc_iplayer()))
+        print("Britbox -> {result}".format(result=self.check_britbox()))
 
     def check_dazn(self):
         result = None
@@ -375,6 +376,23 @@ class OTTCheck(object):
             return result
         if response:
             if "geolocation" in response:
+                result = "No"
+            else:
+                result = "Yes"
+        else:
+            result = "Failed"
+        return result
+
+    def check_britbox(self): # TODO: test
+        result = None
+        redirect_url = None
+        try:
+            redirect_url = requests.get("https://www.britbox.com/", verify=False, timeout=self.default_timeout).url
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if redirect_url:
+            if "locationnotsupported" in redirect_url:
                 result = "No"
             else:
                 result = "Yes"
