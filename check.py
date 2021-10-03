@@ -43,6 +43,7 @@ class OTTCheck(object):
         print("Sky Go -> {result}".format(result=self.check_sky_go()))
         print("Channel 4 -> {result}".format(result=self.check_channel_4()))
         print("ITV Hub -> {result}".format(result=self.check_itv_hub()))
+        print("BBC iPlayer -> {result}".format(result=self.check_bbc_iplayer()))
 
     def check_dazn(self):
         result = None
@@ -361,6 +362,26 @@ class OTTCheck(object):
         else:
             result = "Failed (Unexpected result: {status_code})".format(status_code=status_code)
         return result
+
+    def check_bbc_iplayer(self): # TODO: test
+        result = None
+        response = None
+        try:
+            response = requests.get("https://open.live.bbc.co.uk/mediaselector/6/select/version/2.0/mediaset/pc/vpid/bbc_one_london/format/json/jsfunc/JS_callbacks0", headers={
+                "User-Agent": self.user_agent
+            }, verify=False, timeout=self.default_timeout)
+        except requests.exceptions.ConnectTimeout as e:
+            result = "Failed (Network Connection)"
+            return result
+        if response:
+            if "geolocation" in response:
+                result = "No"
+            else:
+                result = "Yes"
+        else:
+            result = "Failed"
+        return result
+
 
 oc = OTTCheck()
 print(oc.multination())
